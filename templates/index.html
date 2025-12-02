@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <!-- Meta tag essentiel pour le responsive design (mobile-first) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServicePay — Paiement d’abonnements numériques sans carte Visa</title>
+    <!-- Chargement de Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chargement de Font Awesome pour l'icône WhatsApp -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLMDJc5GfQO+S/xPBOsWn+bF6K/Ea9q11F2E31c2KjB+Q6F2B8zW1g2O3wY9oP8Vw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        /* Configuration de la palette de couleurs et de la police */
+        :root {
+            --color-dark-blue: #1e3a8a;
+            --color-gold: #facc15;
+        }
+        
+        /* Configuration de la police Montserrat */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--color-dark-blue);
+        }
+
+        /* Classe pour l'animation d'apparition au scroll */
+        .fade-in-on-scroll {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .fade-in-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Style spécifique pour le bouton WhatsApp flottant */
+        .whatsapp-float-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 50;
+            background-color: #25D366; /* Vert WhatsApp */
+            color: white;
+            padding: 1rem;
+            border-radius: 9999px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+            animation: pulse 2s infinite;
+        }
+        .whatsapp-float-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+            animation: none;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+            100% { transform: scale(0.9); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+        }
+
+        /* Style pour les boutons CTA */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--color-gold);
+            color: var(--color-dark-blue);
+            font-weight: 700;
+            padding: 0.75rem 1.5rem;
+            border-radius: 9999px;
+            transition: background-color 0.3s ease, transform 0.1s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .cta-button:hover {
+            background-color: #eab308; /* Tonalité légèrement plus foncée du doré */
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* Style pour les cartes de tarif */
+        .price-card {
+            border: 2px solid var(--color-dark-blue);
+            background-color: #ffffff;
+            transition: transform 0.3s ease;
+        }
+        .price-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.15);
+        }
+
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Bouton WhatsApp flottant -->
+    <a href="https://wa.me/243999939477" target="_blank" class="whatsapp-float-btn" title="Contactez-nous sur WhatsApp">
+        <i class="fab fa-whatsapp text-3xl"></i>
+    </a>
+
+    <!-- 1. Header et Navigation -->
+    <header id="accueil" class="sticky top-0 z-40 bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center py-4 md:justify-start md:space-x-10">
+                <!-- Logo -->
+                <div class="flex justify-start lg:w-0 lg:flex-1">
+                    <a href="#accueil" class="text-3xl font-black" style="color: var(--color-dark-blue);">
+                        Service<span style="color: var(--color-gold);">Pay</span>
+                    </a>
+                </div>
+
+                <!-- Bouton Menu Mobile -->
+                <div class="-mr-2 -my-2 md:hidden">
+                    <button id="mobile-menu-button" type="button" class="bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-500 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset" style="color: var(--color-dark-blue);">
+                        <span class="sr-only">Ouvrir le menu principal</span>
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Menu de navigation (Desktop) -->
+                <nav class="hidden md:flex space-x-10 font-semibold">
+                    <a href="#accueil" class="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Accueil</a>
+                    <a href="#tarifs" class="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Nos Tarifs</a>
+                    <a href="#a-propos" class="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">À propos</a>
+                    <a href="#contact" class="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Contact</a>
+                </nav>
+
+                <!-- Bouton CTA (Desktop) -->
+                <div class="hidden md:flex items-center justify-end md:flex-1 lg:w-0">
+                    <a href="https://wa.me/243999939477" target="_blank" class="cta-button">
+                        Contactez-nous sur WhatsApp
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menu Mobile (Affiché/Masqué par JS) -->
+        <div id="mobile-menu" class="hidden md:hidden absolute top-full left-0 right-0 bg-white shadow-xl z-30">
+            <div class="pt-2 pb-3 space-y-1 px-2">
+                <a href="#accueil" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">Accueil</a>
+                <a href="#tarifs" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">Nos Tarifs</a>
+                <a href="#a-propos" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">À propos</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md text-base font-medium text-gray-900 hover:bg-gray-50">Contact</a>
+            </div>
+            <div class="py-4 px-5 border-t border-gray-100">
+                <a href="https://wa.me/243999939477" target="_blank" class="cta-button w-full">
+                    Contactez-nous sur WhatsApp
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- 2. Section d’accueil (Hero) -->
+        <section id="hero" class="py-16 md:py-24 lg:py-32 text-center bg-gray-100" style="background-color: #f9f9f9;">
+            <div class="max-w-4xl mx-auto px-4 fade-in-on-scroll">
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6" style="color: var(--color-dark-blue);">
+                    Vos abonnements plus simples que jamais, <span style="color: var(--color-gold);">ServicePay s’occupe de tout</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-700 mb-10 max-w-2xl mx-auto">
+                    Avec ServicePay, profitez de vos plateformes préférées — Netflix, Spotify, Apple Music, et plus encore.
+                </p>
+                <a href="https://wa.me/243999939477" target="_blank" class="cta-button text-lg px-8 py-3">
+                    Contactez-nous sur WhatsApp
+                </a>
+            </div>
+        </section>
+
+        <!-- 3. Section — Nos Tarifs -->
+        <section id="tarifs" class="py-16 md:py-24 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12 fade-in-on-scroll">
+                    <h2 class="text-3xl sm:text-4xl font-bold mb-4" style="color: var(--color-dark-blue);">
+                        Nos Tarifs — Services Numériques
+                    </h2>
+                    <p class="text-md text-gray-600 max-w-3xl mx-auto">
+                        Nous vous aidons à activer vos abonnements sur les principales plateformes de streaming, musique, jeux et réseaux sociaux.
+                    </p>
+                </div>
+
+                <!-- Conteneur des cartes de tarifs --><div class="space-y-12 fade-in-on-scroll">
+
+                    <!-- Catégorie: Streaming Vidéo --><div class="space-y-6">
+                        <h3 class="text-2xl font-bold border-b-2 pb-2" style="border-color: var(--color-gold); color: var(--color-dark-blue);">🎬 Streaming Vidéo</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Netflix --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Netflix</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>Compte personnel (1 profil)</span> <span class="font-bold">12 000 FC / mois</span></li>
+                                    <li class="flex justify-between"><span>Compte familial (5 profils)</span> <span class="font-bold">36 000 FC / mois</span></li>
+                                </ul>
+                            </div>
+                            <!-- Amazon Prime Vidéo --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Amazon Prime Vidéo</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>Compte personnel (1 profil)</span> <span class="font-bold">10 000 FC / mois</span></li>
+                                    <li class="flex justify-between"><span>Compte familial (6 profils)</span> <span class="font-bold">28 000 FC / mois</span></li>
+                                </ul>
+                            </div>
+                            <!-- Crunchyroll Premium --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Crunchyroll Premium</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>Compte personnel (1 profil)</span> <span class="font-bold">12 000 FC / mois</span></li>
+                                    <li class="flex justify-between"><span>Compte familial (5 profils)</span> <span class="font-bold">36 000 FC / mois</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Catégorie: Streaming Musical (Utilise md:grid-cols-3 pour la même largeur de cartes) --><div class="space-y-6">
+                        <h3 class="text-2xl font-bold border-b-2 pb-2" style="border-color: var(--color-gold); color: var(--color-dark-blue);">🎵 Streaming Musical</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Spotify --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Spotify Premium</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>Compte personnel</span> <span class="font-bold">10 000 FC / mois</span></li>
+                                </ul>
+                            </div>
+                            <!-- Apple Music --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Apple Music</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>Compte personnel</span> <span class="font-bold">12 000 FC / mois</span></li>
+                                </ul>
+                            </div>
+                            <!-- Deezer --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Deezer</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>Compte personnel</span> <span class="font-bold">15 000 FC / mois</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Catégorie: Réseaux Sociaux --><div class="space-y-6">
+                        <h3 class="text-2xl font-bold border-b-2 pb-2" style="border-color: var(--color-gold); color: var(--color-dark-blue);">📱 Réseaux Sociaux</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Snapchat+ --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Snapchat+</h4>
+                                <ul class="space-y-2 text-gray-700">
+                                    <li class="flex justify-between"><span>12 mois</span> <span class="font-bold">82 000 FC</span></li>
+                                    <li class="flex justify-between"><span>6 mois</span> <span class="font-bold">59 000 FC</span></li>
+                                    <li class="flex justify-between"><span>3 mois</span> <span class="font-bold">36 000 FC</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Catégorie: Jeux & Plateformes --><div class="space-y-6">
+                        <h3 class="text-2xl font-bold border-b-2 pb-2" style="border-color: var(--color-gold); color: var(--color-dark-blue);">🎮 Jeux & Plateformes</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- PlayStation Plus --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">PlayStation Plus</h4>
+                                <ul class="space-y-2 text-gray-700 text-left">
+                                    <li class="flex flex-col mb-2">
+                                        <span class="font-bold">Essentiel : 36 000 FC / mois</span>
+                                        <span class="text-sm text-gray-600">Accédez à une sélection de jeux mensuels pour jouer en ligne avec vos amis.</span>
+                                    </li>
+                                    <li class="flex flex-col">
+                                        <span class="font-bold">Premium : 59 000 FC / mois</span>
+                                        <span class="text-sm text-gray-600">Profitez de centaines de jeux, du streaming cloud et des classiques PlayStation.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                            <!-- Xbox Game Pass --><div class="price-card p-6 rounded-xl shadow-lg">
+                                <h4 class="text-xl font-bold mb-3">Xbox Game Pass</h4>
+                                <ul class="space-y-2 text-gray-700 text-left">
+                                    <li class="flex flex-col mb-2">
+                                        <span class="font-bold">Essentiel : 36 000 FC / mois</span>
+                                        <span class="text-sm text-gray-600">Jouez à plus de 50 jeux populaires et bénéficiez du multijoueur en ligne.</span>
+                                    </li>
+                                    <li class="flex flex-col">
+                                        <span class="font-bold">Premium : 46 000 FC / mois</span>
+                                        <span class="text-sm text-gray-600">Accédez à plus de 200 jeux récents et exclusifs sur console, PC et cloud.</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Note et CTA -->
+                    <div class="text-center pt-8 border-t border-gray-200">
+                        <p class="text-sm italic text-gray-500 mb-6">
+                            💬 Les tarifs peuvent varier selon le taux de change. Contactez-nous pour confirmation.
+                        </p>
+                        <a href="https://wa.me/243999939477" target="_blank" class="cta-button text-lg px-8 py-3">
+                            <i class="fab fa-whatsapp mr-3"></i> Commander via WhatsApp
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+        
+        <!-- 4. Section — À propos -->
+        <section id="a-propos" class="py-16 md:py-24 bg-gray-100">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6" style="color: var(--color-dark-blue);">
+                    À propos de ServicePay
+                </h2>
+                <div class="space-y-6 text-lg text-gray-700 text-left">
+                    <p>
+                        ServicePay est un service numérique basé à Kinshasa, spécialisé dans le paiement d’abonnements pour les plateformes internationales.
+                    </p>
+                    <p>
+                        Nous facilitons l’accès à vos services préférés (Netflix, Spotify, Apple Music, PlayStation, etc.) en utilisant les solutions de paiement mobile locales.
+                    </p>
+                    <p class="font-semibold">
+                        Fiabilité, rapidité et sécurité sont au cœur de notre mission. Nous aidons chaque mois de nombreux clients congolais à rester connectés à leurs divertissements sans complication.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Section — Contact -->
+        <section id="contact" class="py-16 md:py-24 bg-white">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center fade-in-on-scroll">
+                <h2 class="text-3xl sm:text-4xl font-bold mb-6" style="color: var(--color-dark-blue);">
+                    Contactez-nous
+                </h2>
+                <p class="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
+                    « Pour tout abonnement ou renseignement, contactez-nous directement via WhatsApp. Notre équipe est disponible 7j/7. »
+                </p>
+                <a href="https://wa.me/243999939477" target="_blank" class="cta-button text-xl px-10 py-3">
+                    <i class="fab fa-whatsapp mr-3"></i> Discuter sur WhatsApp
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 6. Footer -->
+    <footer class="py-10 bg-gray-900 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="mb-2 text-sm">
+                © <span id="current-year"></span> ServicePay — Tous droits réservés.
+            </p>
+            <p class="text-sm font-semibold" style="color: var(--color-gold);">
+                Moyens de paiement : Airtel Money 
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript pour les interactions -->
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            // Mise à jour de l'année dans le footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+
+            // 1. Gestion du menu mobile (Affichage/Masquage)
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+                // Optionnel: Changer l'icône du bouton si souhaité
+            });
+
+            // Fermer le menu mobile lors d'un clic sur un lien du menu
+            mobileMenu.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            // 2. Défilement fluide (Bien que CSS scroll-smooth soit là, ceci est pour la compatibilité)
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+
+            // 3. Animation d'apparition (Fade-in au scroll) utilisant Intersection Observer
+            const elementsToObserve = document.querySelectorAll('.fade-in-on-scroll');
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                        observer.unobserve(entry.target); // Arrête d'observer une fois visible
+                    }
+                });
+            }, {
+                rootMargin: '0px',
+                threshold: 0.1 // Déclenchement quand 10% de l'élément est visible
+            });
+
+            elementsToObserve.forEach(element => {
+                observer.observe(element);
+            });
+        });
+    </script>
+</body>
+</html>
