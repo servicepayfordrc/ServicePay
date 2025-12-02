@@ -9,7 +9,7 @@ app = Flask(__name__)
 def home():
     # La fonction render_template cherchera 'index.html' dans un dossier 'templates' par défaut.
     # Pour cet environnement, nous supposons qu'elle sert simplement le fichier index.html.
-    return render_template('/templates/index.html')
+    return render_template('index.html')
 
 # Point d'entrée pour lancer le serveur
 if __name__ == '__main__':
